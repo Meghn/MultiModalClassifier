@@ -31,7 +31,7 @@ except:
     # !pip install -q torchinfo
     # from torchinfo import summary
 
-os.environ['TORCH_HOME'] = '/data/cmpe249-fa23/torchhome/' #setting the environment variable
+os.environ['TORCH_HOME'] = '~/Documents/torchhome/' #setting the environment variable
 
 CHECKPOINT_PATH="./outputs"
 CHECKPOINT_file=os.path.join(CHECKPOINT_PATH, 'checkpoint.pth.tar')
@@ -67,11 +67,11 @@ device = None
 #python myTorchTrainer.py --data_name 'imagenet_blurred' --data_type 'trainonly' --data_path "/data/cmpe249-fa22/ImageClassData" --model_name 'resnet50' --learningratename 'StepLR' --lr 0.1 --momentum 0.9 --wd 1e-4 --optimizer 'SGD'
 
 parser = configargparse.ArgParser(description='myTorchClassify')
-parser.add_argument('--data_name', type=str, default='imagenet_blurred',
+parser.add_argument('--data_name', type=str, default='tiny-imagenet-200',
                     help='data name: imagenet_blurred, tiny-imagenet-200, hymenoptera_data, CIFAR10, MNIST, flower_photos')
 parser.add_argument('--data_type', default='trainonly', choices=['trainonly','trainvalfolder', 'traintestfolder', 'torchvisiondataset'],
                     help='the type of data') 
-parser.add_argument('--data_path', type=str, default="/data/cmpe249-fa23/ImageClassData",
+parser.add_argument('--data_path', type=str, default="~/Documents/data/",
                     help='path to get data') #/Developer/MyRepo/ImageClassificationData; r"E:\Dataset\ImageNet\tiny-imagenet-200"
 parser.add_argument('--img_height', type=int, default=224,
                     help='resize to img height, 224')
@@ -80,13 +80,13 @@ parser.add_argument('--img_width', type=int, default=224,
 parser.add_argument('--save_path', type=str, default='./outputs/',
                     help='path to save the model')
 # network
-parser.add_argument('--model_name', default='resnet50',
+parser.add_argument('--model_name', default='resnetmodel1',
                     help='the network') #choices=['mlpmodel1', 'lenet', 'alexnet', 'resnetmodel1', 'customresnet', 'vggmodel1', 'vggcustom', 'cnnmodel1']
 parser.add_argument('--model_type', default='ImageNet', choices=['ImageNet', 'custom'],
                     help='the network')
 parser.add_argument('--torchhub', default='facebookresearch/deit:main',
                     help='the torch hub link')
-parser.add_argument('--resume', default="outputs/imagenet_blurred_resnet50_0328/model_best.pth.tar", type=str, metavar='PATH',
+parser.add_argument('--resume', default="outputs/imagenet_blurred_resnetmodel1_0328/model_best.pth.tar", type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('--arch', default='Pytorch', choices=['Tensorflow', 'Pytorch'],
                     help='Model Name, default: Pytorch.')
@@ -372,13 +372,13 @@ def main():
     tensorboard_writer = SummaryWriter(args.save_path)
 
     if args.GPU:
-        num_gpu = torch.cuda.device_count()
-        print("Num GPUs:", num_gpu)
+        # num_gpu = torch.cuda.device_count()
+        # print("Num GPUs:", num_gpu)
         # Which GPU Is The Current GPU?
-        print(torch.cuda.current_device())
+        # print(torch.cuda.current_device())
 
         # Get the name of the current GPU
-        print(torch.cuda.get_device_name(torch.cuda.current_device()))
+        # print(torch.cuda.get_device_name(torch.cuda.current_device()))
 
         # Is PyTorch using a GPU?
         print(torch.cuda.is_available())
@@ -458,7 +458,7 @@ def main():
         schedule=torch.profiler.schedule(wait=1, warmup=1, active=3, repeat=2),
         on_trace_ready=torch.profiler.tensorboard_trace_handler(args.save_path),
         record_shapes=True,
-        with_stack=True)
+        with_stack=False)
     model_ft = train_model(model_ft, dataloaders, dataset_sizes, criterion, optimizer_ft, lr_scheduler,
                        start_epoch=args.start_epoch, num_epochs=args.epochs, 
                        tensorboard_writer=tensorboard_writer, profile=prof, checkpoint_path=args.save_path)

@@ -502,7 +502,7 @@ def create_torchvisionmodel(modulename, numclasses, freezeparameters=True, pretr
         lastlayer=lastmoduleinlist[-1]
         if isinstance(lastlayer, nn.Linear):
             print('Linear layer')
-            newclassifier = nn.Linear(in_features=lastlayer.in_features, out_features=classnum)
+            newclassifier = nn.Linear(in_features=lastlayer.in_features, out_features=numclasses)
         elif isinstance(lastlayer, nn.Sequential):
             print('Sequential layer')
             lastlayerlist=list(lastlayer) #[-1] #last layer
